@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package minerva;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+message FlowResponse {
+  string id = 1;
+  string user_id = 2;
+  string strategy_id = 3;
+  google.protobuf.Struct graph = 4;
+  google.protobuf.Struct ast = 5;
+  string status = 6;
+  bool is_archived = 7;
+  int32 backtests_count = 8;
+  int32 executions_count = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+message FlowsListResponse {
+  repeated FlowResponse flows = 1;
+}
+
+message CreateDraftFlowRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  google.protobuf.Struct graph = 3;
+}
+
+message PromoteDraftFlowRequest {
+  string strategy_id = 1;
+  string user_id = 2;
+}
+
+message ArchivedFlowsByStrategyIdRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  string status = 3;
+}
+
+message FlowByStrategyIdRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  string status = 3;
+}
+
+message FlowsByStrategyIdRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+}
+
+message FlowByIdRequest {
+  string id = 1;
+  string user_id = 2;
+}
+
+message ListFlowsByStrategyIdsRequest {
+  repeated string ids = 1;
+}
+
+service Flows {
+  rpc CreateDraftFlow(CreateDraftFlowRequest) returns (FlowResponse);
+  rpc PromoteDraftFlow(PromoteDraftFlowRequest) returns (FlowResponse);
+  rpc ListArchivedFlowsByStrategyId(ArchivedFlowsByStrategyIdRequest) returns (FlowsListResponse);
+  rpc GetFlowByStrategyId(FlowByStrategyIdRequest) returns (FlowResponse);
+  rpc ListFlowsByStrategyId(FlowsByStrategyIdRequest) returns (FlowsListResponse);
+  rpc GetFlowById(FlowByIdRequest) returns (FlowResponse);
+  rpc ListFlowsByStrategyIds(ListFlowsByStrategyIdsRequest) returns (FlowsListResponse);
+}

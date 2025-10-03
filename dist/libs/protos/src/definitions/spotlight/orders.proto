@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package spotlight;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+message OrderFee {
+  string asset = 1;
+  double amount = 2;
+}
+
+message OrderResponse {
+  string id = 1;
+  string user_id = 2;
+  optional string order_id = 3;
+  string strategy_id = 4;
+  string flow_id = 5;
+  string broker = 6;
+  string base = 7;
+  string quote = 8;
+  string type = 9;
+  bool is_paper = 10;
+  string side = 11;
+  string status = 12;
+  bool in_order_book = 13;
+  double volume_traded = 14;
+  double quote_volume_traded = 15;
+  optional double volume = 16;
+  optional double quote_volume = 17;
+  optional double display_volume = 18;
+  optional string time_in_force = 19;
+  optional double limit_price = 20;
+  optional double trigger_price = 21;
+  optional double trailing_delta = 22;
+  google.protobuf.Timestamp created_at = 23;
+  optional google.protobuf.Timestamp pending_at = 24;
+  optional google.protobuf.Timestamp opened_at = 25;
+  optional google.protobuf.Timestamp closed_at = 26;
+  optional google.protobuf.Timestamp canceled_at = 27;
+  optional google.protobuf.Timestamp rejected_at = 28;
+  optional string error_code = 29;
+  optional string error_message = 30;
+  repeated OrderFee fees = 31;
+}
+
+message OrdersListResponse {
+  repeated OrderResponse orders = 1;
+}
+
+message DeleteOrderResponse {
+  string id = 1;
+}
+
+message CreateOrder {
+  string base = 1;
+  string quote = 2;
+  string side = 3;
+  string type = 4;
+  optional double volume = 5;
+  optional double quote_volume = 6;
+  optional double display_volume = 7;
+  optional string time_in_force = 8;
+  optional double limit_price = 9;
+  optional double trailing_delta = 10;
+  optional double trigger_price = 11;
+}
+
+message CreateOrdersRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  string flow_id = 3;
+  google.protobuf.Timestamp expire_at = 4;
+  bool is_paper = 5;
+  string broker = 6;
+  repeated CreateOrder orders = 7;
+}
+
+message CancelAllOrdersByStrategyIdRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  string broker = 3;
+}
+
+message OrderByIdRequest {
+  string id = 1;
+  string user_id = 2;
+}
+
+message ListOrdersByStrategyIdRequest {
+  string strategy_id = 1;
+  string user_id = 2;
+  optional string status = 3;
+  optional google.protobuf.Timestamp start_date = 4;
+  optional google.protobuf.Timestamp end_date = 5;
+}
+
+message ListOrdersByUserIdRequest {
+  string user_id = 1;
+  optional string status = 2;
+  optional google.protobuf.Timestamp start_date = 3;
+  optional google.protobuf.Timestamp end_date = 4;
+}
+
+message CandleRequest {
+  string base = 1;
+  string quote = 2;
+  string broker = 3;
+  google.protobuf.Timestamp open_time = 4;
+  google.protobuf.Timestamp close_time = 5;
+  double high = 6;
+  double low = 7;
+  optional bool is_paper = 8;
+}
+
+message ExtractHasOpenedOrdersRequest {
+  repeated string strategy_ids = 1;
+}
+
+message ExtractHasOpenedOrdersResponse {
+  repeated string strategy_ids = 1;
+  string base = 2;
+  string quote = 3;
+  string broker = 4;
+}
+
+message GetBudgetImpactRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+}
+
+message GetBudgetImpactByFrequencyRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  string frequency = 5;
+}
+
+message ListBudgetsImpactsRequest {
+  repeated GetBudgetImpactRequest budgets = 1;
+  bool tradeableAssetsOnly = 2;
+}
+
+message GetProfitsAndLossesRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  string frequency = 5;
+}
+
+message UpdateOrderRequest {
+  string id = 1;
+  string user_id = 2;
+  string status = 3;
+  google.protobuf.Timestamp date = 4;
+  optional string order_id = 5;
+  optional double volume_traded = 6;
+  optional double quote_volume_traded = 7;
+  optional bool in_order_book = 8;
+  optional string error_code = 9;
+  optional string error_message = 10;
+}
+
+message UpdateOrdersBulkRequest {
+  repeated UpdateOrderRequest orders = 1;
+}
+
+service Orders {
+  rpc CreateOrders(CreateOrdersRequest) returns (OrdersListResponse);
+  rpc CancelAllOrdersByStrategyId(CancelAllOrdersByStrategyIdRequest) returns (OrdersListResponse);
+  rpc GetOrderById(OrderByIdRequest) returns (OrderResponse);
+  rpc ListOrdersByStrategyId(ListOrdersByStrategyIdRequest) returns (OrdersListResponse);
+  rpc ListOrdersByUserId(ListOrdersByUserIdRequest) returns (OrdersListResponse);
+  rpc ListPendingOrdersTriggeredByCandle(CandleRequest) returns (OrdersListResponse);
+  rpc ExtractHasOpenedOrders(ExtractHasOpenedOrdersRequest) returns (ExtractHasOpenedOrdersResponse);
+  rpc GetBudgetImpact(GetBudgetImpactRequest) returns (google.protobuf.Struct);
+  rpc GetBudgetImpactByFrequency(GetBudgetImpactByFrequencyRequest) returns (google.protobuf.Struct);
+  rpc ListBudgetsImpacts(ListBudgetsImpactsRequest) returns (google.protobuf.Struct);
+  rpc GetProfitsAndLosses(GetProfitsAndLossesRequest) returns (google.protobuf.Struct);
+  rpc UpdateOrder(UpdateOrderRequest) returns (OrderResponse);
+  rpc UpdateOrdersBulk(UpdateOrdersBulkRequest) returns (OrdersListResponse);
+}

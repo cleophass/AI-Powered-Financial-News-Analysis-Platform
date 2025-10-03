@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package minerva;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+message PairBroker {
+  string base = 1;
+  string quote = 2;
+  string broker = 3;
+}
+
+message PairRatio {
+  string base = 1;
+  string quote = 2;
+  string broker = 3;
+  double quote_ratio = 4;
+  double base_ratio = 5;
+}
+
+message RRuleOptions {
+  int32 frequency = 1;
+  int32 interval = 2;
+  google.protobuf.Timestamp dtstart = 3;
+  // protolint:disable REPEATED_FIELD_NAMES_PLURALIZED
+  repeated int32 bysetpos = 4;
+  repeated int32 bymonth = 5;
+  repeated int32 bymonthday = 6;
+  repeated int32 byyearday = 7;
+  repeated int32 byweekno = 8;
+  repeated int32 byweekday = 9;
+  repeated int32 byhour = 10;
+  repeated int32 byminute = 11;
+  // protolint:enable REPEATED_FIELD_NAMES_PLURALIZED
+}
+
+message StrategyResponse {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+  string type = 4;
+  bool is_active = 5;
+  google.protobuf.Struct base_budget = 6;
+  optional google.protobuf.Timestamp last_budget_change = 7;
+  optional RRuleOptions recurrence = 8;
+  repeated google.protobuf.Timestamp recurrence_dates = 9;
+  optional bool run_if_orders_active = 10;
+  optional bool stop_if_error = 11;
+  optional int32 max_execution_delay = 12;
+  optional bool cancel_all_orders_before_execution = 13;
+  optional google.protobuf.Timestamp deployed_at = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  repeated PairRatio active_pairs = 17;
+  repeated PairBroker draft_pairs = 18;
+}
+
+message StrategiesListResponse {
+  repeated StrategyResponse strategies = 1;
+}
+
+message StrategiesByUserIdRequest {
+  string user_id = 1;
+}
+
+message StrategyByIdRequest {
+  string user_id = 1;
+  string id = 2;
+}
+
+message CreateStrategyRequest {
+  string user_id = 1;
+  string name = 2;
+  string type = 3;
+  RRuleOptions recurrence = 4;
+}
+
+message UpdateStrategyRequest {
+  string id = 1;
+  string user_id = 2;
+  optional string name = 3;
+  optional string type = 4;
+  optional RRuleOptions recurrence = 5;
+  optional bool is_active = 6;
+  optional bool run_if_orders_active = 7;
+  optional bool stop_if_error = 8;
+  optional int32 max_execution_delay = 9;
+  optional bool cancel_all_orders_before_execution = 10;
+  optional google.protobuf.Struct base_budget = 11;
+}
+
+message SetStrategyActivePairsRequest {
+  string id = 1;
+  string user_id = 2;
+  repeated PairRatio activePairs = 3;
+  optional bool clear = 4;
+}
+
+message SetStrategyDraftPairsRequest {
+  string id = 1;
+  string user_id = 2;
+  repeated PairBroker draftPairs = 3;
+  optional bool clear = 4;
+}
+
+message ListActiveStrategiesRequest {
+  string base = 1;
+  string quote = 2;
+  string broker = 3;
+  google.protobuf.Timestamp execution_date = 4;
+}
+
+service Strategies {
+  rpc ListStrategiesByUserId(StrategiesByUserIdRequest) returns (StrategiesListResponse);
+  rpc GetStrategyById(StrategyByIdRequest) returns (StrategyResponse);
+  rpc CreateStrategy(CreateStrategyRequest) returns (StrategyResponse);
+  rpc UpdateStrategy(UpdateStrategyRequest) returns (StrategyResponse);
+  rpc SetStrategyActivePairs(SetStrategyActivePairsRequest) returns (StrategyResponse);
+  rpc SetStrategyDraftPairs(SetStrategyDraftPairsRequest) returns (StrategyResponse);
+  rpc DeleteStrategy(StrategyByIdRequest) returns (google.protobuf.Empty);
+  rpc ListActiveStrategies(ListActiveStrategiesRequest) returns (StrategiesListResponse);
+}

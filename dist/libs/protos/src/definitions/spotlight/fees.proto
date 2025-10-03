@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package spotlight;
+
+import "google/protobuf/timestamp.proto";
+
+message Fee {
+  string asset = 1;
+  string broker = 2;
+  double amount = 3;
+}
+
+message FeeResponse {
+  string id = 1;
+  string user_id = 2;
+  optional string order_id = 3;
+  string asset = 4;
+  string broker = 5;
+  double amount = 6;
+}
+
+message FeesListResponse {
+  repeated FeeResponse fees = 1;
+}
+
+message FeeByIdRequest {
+  string id = 1;
+  string user_id = 2;
+}
+
+message ListFeesByOrderIdRequest {
+  string user_id = 1;
+  string order_id = 2;
+}
+
+message ListFeesByStrategyIdRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+  optional google.protobuf.Timestamp start_date = 3;
+  optional google.protobuf.Timestamp end_date = 4;
+}
+
+message SetOrderFeesRequest {
+  string user_id = 1;
+  string order_id = 2;
+  repeated Fee fees = 3;
+}
+
+service Fees {
+  rpc GetFeeById(FeeByIdRequest) returns (FeeResponse);
+  rpc ListFeesByOrderId(ListFeesByOrderIdRequest) returns (FeesListResponse);
+  rpc ListFeesByStrategyId(ListFeesByStrategyIdRequest) returns (FeesListResponse);
+  rpc SetOrderFees(SetOrderFeesRequest) returns (FeesListResponse);
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@straufi/env-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/env-utils/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project @straufi/env-utils --web",
+  "targets": {}
+}

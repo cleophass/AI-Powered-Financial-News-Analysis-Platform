@@ -1,0 +1,75 @@
+  syntax = "proto3";
+
+  package abacus;
+
+  import "google/protobuf/struct.proto";
+  import "google/protobuf/timestamp.proto";
+
+  message Asset {
+    string base = 1;
+    string broker = 2;
+  }
+
+  message Rate {
+    string base = 1;
+    string quote = 2;
+    string broker = 3;
+    double rate = 4;
+  }
+
+  message Indicator {
+    string name = 1;
+    google.protobuf.Struct parameters = 2;
+  }
+
+  message IndicatorMetadata {
+    string key = 1;
+    string name = 2;
+    google.protobuf.Struct parameters = 3;
+  }
+
+  message ComputedIndicator {
+    string key = 1;
+    google.protobuf.Struct outputs = 2;
+  }
+
+  message GetMarketDataRequest {
+    google.protobuf.Timestamp start = 1;
+    google.protobuf.Timestamp end = 2;
+    string interval = 3;
+    string base = 4;
+    string quote = 5;
+    string broker = 6;
+    repeated Indicator indicators = 7;
+  }
+
+  message GetRatesRequest {
+    repeated Asset assets = 1;
+    string quote = 2;
+  }
+
+  message Candle {
+    google.protobuf.Timestamp open_time = 1;
+    google.protobuf.Timestamp close_time = 2;
+    double open = 3;
+    double high = 4;
+    double low = 5;
+    double close = 6;
+    double volume = 7;
+    repeated ComputedIndicator indicators = 8;
+  }
+
+  message MarketDataResponse {
+    repeated IndicatorMetadata indicators = 1;
+    repeated Candle candles = 2;
+  }
+
+  message RatesResponse {
+    google.protobuf.Timestamp time = 1;
+    repeated Rate rates = 2;
+  }
+
+  service MarketData {
+    rpc GetMarketData(GetMarketDataRequest) returns (MarketDataResponse);
+    rpc GetRates(GetRatesRequest) returns (RatesResponse);
+  }

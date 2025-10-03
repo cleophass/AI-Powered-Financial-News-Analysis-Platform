@@ -1,0 +1,61 @@
+syntax="proto3";
+
+package sonar;
+
+import "google/protobuf/empty.proto";
+
+message CreateApiKeyRequest {
+  string user_id = 1;
+  string api_key = 2;
+  string api_secret = 3;
+  string broker = 4;
+  optional string name = 5;
+}
+
+message DeleteApiKeyRequest {
+  string user_id = 1;
+  string id = 2;
+}
+
+message GetApiKeyRequest {
+  string user_id = 1;
+  string broker = 2;
+}
+
+message ListApiKeysByUserIdRequest {
+  string user_id = 1;
+}
+
+message Ed25519KeyResponse {
+  string public_key = 1;
+}
+
+message ApiKeyResponse {
+  string id = 1;
+  string user_id = 2;
+  string api_key = 3;
+  string broker = 4;
+  string created_at = 5;
+  optional string name = 6;
+}
+
+message ApiKeysListResponse {
+  repeated ApiKeyResponse api_keys = 1;
+}
+
+message GetValidBrokersRequest {
+  string user_id = 1;
+}
+
+message ValidBrokersResponse {
+  repeated string brokers = 1;
+}
+
+service ApiKeys {
+  rpc GenerateEd25519KeyPair(google.protobuf.Empty) returns (Ed25519KeyResponse);
+  rpc CreateApiKey(CreateApiKeyRequest) returns (ApiKeyResponse);
+  rpc DeleteApiKey(DeleteApiKeyRequest) returns (google.protobuf.Empty);
+  rpc GetApiKey(GetApiKeyRequest) returns (ApiKeyResponse);
+  rpc ListApiKeysByUserId(ListApiKeysByUserIdRequest) returns (ApiKeysListResponse);
+  rpc GetValidBrokers(GetValidBrokersRequest) returns (ValidBrokersResponse);
+}

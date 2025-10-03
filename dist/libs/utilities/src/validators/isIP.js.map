@@ -1,0 +1,1 @@
+{"version":3,"file":"isIP.js","sourceRoot":"","sources":["../../../../../libs/utilities/src/validators/isIP.ts"],"names":[],"mappings":";;AAEA,oBAEC;AAJD,MAAM,SAAS,GAAG,yFAAyF,CAAC;AAE5G,SAAgB,IAAI,CAAC,KAAa;IAChC,OAAO,SAAS,CAAC,IAAI,CAAC,KAAK,CAAC,CAAC;AAC/B,CAAC"}

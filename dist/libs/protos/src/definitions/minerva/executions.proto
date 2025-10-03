@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package minerva;
+
+import "google/protobuf/struct.proto";
+
+message ExecutionResponse {
+  string id = 1;
+  google.protobuf.Struct execution_result = 2;
+  string created_at = 3;
+}
+
+message CreateExecutionRequest {
+  string flow_id = 1;
+  string user_id = 2;
+  google.protobuf.Struct execution_result = 3;
+}
+
+service Executions {
+  rpc CreateExecution(CreateExecutionRequest) returns (ExecutionResponse);
+}

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package minerva;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+message BacktestResponse {
+  string id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  double base_budget = 3;
+  string frequency = 4;
+  bool run_if_orders_active = 5;
+  string base = 6;
+  string quote = 7;
+  string broker = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  optional google.protobuf.Timestamp finished_at = 11;
+  bool is_finished = 12;
+  repeated google.protobuf.Struct trades = 13;
+  repeated google.protobuf.Struct errors = 14;
+  google.protobuf.Struct metrics = 15;
+}
+
+message BacktestsListResponse {
+  repeated BacktestResponse backtests = 1;
+}
+
+message BacktestByIdRequest {
+  string user_id = 1;
+  string id = 2;
+}
+
+message BacktestsByFlowIdRequest {
+  string user_id = 1;
+  string flow_id = 2;
+}
+
+message BacktestsByStrategyIdRequest {
+  string user_id = 1;
+  string strategy_id = 2;
+}
+
+message BacktestsByUserIdRequest {
+  string user_id = 1;
+}
+
+message CreateBacktestRequest {
+  string user_id = 1;
+  string flow_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  double base_budget = 5;
+  string frequency = 6;
+  bool run_if_orders_active = 7;
+  string base = 8;
+  string quote = 9;
+  string broker = 10;
+}
+
+message UpdateBacktestRequest {
+  string id = 1;
+  string user_id = 2;
+  google.protobuf.Timestamp finished_at = 3;
+  repeated google.protobuf.Struct trades = 4;
+  repeated google.protobuf.Struct errors = 5;
+  google.protobuf.Struct metrics = 6;
+}
+
+service Backtests {
+  rpc CreateBacktest(CreateBacktestRequest) returns (BacktestResponse);
+  rpc UpdateBacktest(UpdateBacktestRequest) returns (BacktestResponse);
+  rpc GetBacktestById(BacktestByIdRequest) returns (BacktestResponse);
+  rpc ListBacktestsByFlowId(BacktestsByFlowIdRequest) returns (BacktestsListResponse);
+  rpc ListBacktestsByStrategyId(BacktestsByStrategyIdRequest) returns (BacktestsListResponse);
+  rpc ListBacktestsByUserId(BacktestsByUserIdRequest) returns (BacktestsListResponse);
+}
