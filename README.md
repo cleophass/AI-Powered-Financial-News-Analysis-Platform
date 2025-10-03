@@ -26,19 +26,6 @@ Service principal de collecte et d'analyse de nouvelles financières qui inclut 
 - **Modèles de données** : Structures TypeScript pour les articles financiers
 - **Module Impact JSON** : Traitement des données d'impact financier
 
-## 📚 Bibliothèques
-
-### Utilities
-Ensemble complet d'utilitaires TypeScript incluant :
-- **Arrays** : Fonctions de filtrage et d'indexation
-- **Classes** : PriorityQueue et autres structures de données
-- **Dates** : Gestion des plages de dates
-- **Enums** : Types énumérés pour assets, brokers, stratégies, etc.
-- **Functions** : Algorithmes (breadthFirstSearch, nullish checks)
-- **Interpreters** : Métadonnées pour expressions et stratégies
-- **String** : Utilitaires de manipulation de chaînes
-- **Types** : Types TypeScript partagés
-- **Validators** : Validation FQDN et IP
 
 ### Env-Utils
 Utilitaires pour la gestion des configurations d'environnement.
@@ -64,15 +51,6 @@ Utilitaires pour la gestion des configurations d'environnement.
 - ✅ Tests unitaires complets
 - ✅ Containerisation Docker
 
-## 🔧 Services gRPC
-
-Le projet inclut des définitions Protocol Buffer pour plusieurs services :
-- **Abacus** : Articles et données de marché
-- **Billy** : Articles financiers
-- **Jarvis** : Conversion texte vers AST
-- **Minerva** : Backtests, exécutions, flux et stratégies
-- **Sonar** : Clés API et ordres
-- **Spotlight** : Frais et ordres
 
 ## 📋 Prérequis
 
